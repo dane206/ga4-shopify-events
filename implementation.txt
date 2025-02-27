@@ -1,0 +1,189 @@
+GA4 EVENT IMPLEMENTATION
+=======================
+
+OVERVIEW
+--------
+Implementation package for GA4 ecommerce tracking on Shopify Plus store.
+Contains 15 core events with enhanced parameters, error handling, and validation.
+
+REQUIRED FILES
+-------------
+/assets/
+    view_item_list.js     - Collection/list views with list type tracking
+    select_item.js        - Product clicks with enhanced categories
+    view_item.js          - Product views with bundle/cross-sell
+    add_to_cart.js        - Cart additions with cart token
+    view_cart.js          - Cart views with source tracking
+    remove_from_cart.js   - Cart removals with removal type
+    view_promotion.js     - Promo views with A/B testing
+    select_promotion.js   - Promo clicks with referral
+    search.js            - Search with filters/sorting
+    generate_lead.js     - Forms with multi-step
+    login_signup.js      - Auth with social/errors
+
+/checkout/
+    begin_checkout.js     - Checkout initiation
+    add_shipping_info.js  - Shipping selection
+    add_payment_info.js   - Payment selection
+    purchase.js           - Order completion
+
+THEME UPDATES
+------------
+1. Add to theme.liquid (before </body>):
+
+{{ 'view_item_list.js' | asset_url | script_tag }}
+{{ 'select_item.js' | asset_url | script_tag }}
+{{ 'view_item.js' | asset_url | script_tag }}
+{{ 'add_to_cart.js' | asset_url | script_tag }}
+{{ 'view_cart.js' | asset_url | script_tag }}
+{{ 'remove_from_cart.js' | asset_url | script_tag }}
+{{ 'view_promotion.js' | asset_url | script_tag }}
+{{ 'select_promotion.js' | asset_url | script_tag }}
+{{ 'search.js' | asset_url | script_tag }}
+{{ 'generate_lead.js' | asset_url | script_tag }}
+{{ 'login_signup.js' | asset_url | script_tag }}
+
+2. Add to checkout.liquid (Shopify Plus only, before </body>):
+
+{{ 'begin_checkout.js' | asset_url | script_tag }}
+{{ 'add_shipping_info.js' | asset_url | script_tag }}
+{{ 'add_payment_info.js' | asset_url | script_tag }}
+{{ 'purchase.js' | asset_url | script_tag }}
+
+3. Add Data Attributes:
+
+PRODUCT GRID ITEMS (collection pages, search results)
+<a href="{{ product.url }}" 
+   data-product-id="{{ product.id }}"
+   data-product-title="{{ product.title }}"
+   data-product-sku="{{ variant.sku }}"
+   data-product-price="{{ product.price }}"
+   data-product-vendor="{{ product.vendor }}"
+   data-product-type="{{ product.type }}"
+   data-product-index="{{ forloop.index }}"
+   data-product-category2="{{ product.metafields.custom.category2 }}"
+   data-product-category3="{{ product.metafields.custom.category3 }}"
+   data-product-category4="{{ product.metafields.custom.category4 }}"
+   data-product-category5="{{ product.metafields.custom.category5 }}">
+
+CART REMOVE BUTTONS
+<button data-cart-remove
+        data-item-id="{{ item.id }}"
+        data-item-title="{{ item.title }}"
+        data-item-sku="{{ item.sku }}"
+        data-item-price="{{ item.price }}"
+        data-item-quantity="{{ item.quantity }}"
+        data-cart-token="{{ cart.token }}">
+
+PROMOTIONAL CONTENT
+<div data-promotion-id="{{ section.settings.promo_id }}"
+     data-promotion-name="{{ section.settings.promo_name }}"
+     data-promotion-creative="{{ section.settings.promo_creative }}"
+     data-promotion-position="{{ section.id }}"
+     data-promotion-group="{{ section.settings.promo_group }}"
+     data-ab-test="{{ section.settings.ab_test_id }}"
+     data-ab-variant="{{ section.settings.ab_variant }}">
+
+FORMS (newsletter, contact)
+<form data-lead-form
+      data-form-id="unique_id"
+      data-form-type="newsletter|contact"
+      data-form-location="header|footer|popup"
+      data-lead-value="{{ form.metafields.custom.value }}"
+      data-multi-step="true"
+      data-total-steps="3">
+
+AUTH FORMS
+<form action="/account/login"
+      data-auth-form
+      data-auth-location="page|modal|header">
+
+<button data-social-login
+        data-social-provider="google|facebook|apple">
+
+FILES TO UPDATE
+--------------
+snippets/
+    product-card.liquid   (product attributes)
+    cart-item.liquid      (cart attributes)
+sections/
+    announcement-bar.liquid (promo attributes)
+    newsletter.liquid      (form attributes)
+    [other promo sections] (promo attributes)
+    [other form sections]  (form attributes)
+checkout/
+    checkout.liquid        (checkout event scripts)
+
+TESTING CHECKLIST
+----------------
+1. Product Events
+   □ Collection page loads (view_item_list)
+     - Verify list type
+     - Check categories
+   □ Product clicks (select_item)
+     - Verify list source
+     - Check categories
+   □ Product page views (view_item)
+     - Check bundle detection
+     - Verify cross-sells
+   □ Add to cart (add_to_cart)
+     - Verify cart token
+     - Check cart type
+   □ View cart (view_cart)
+     - Check cart source
+     - Verify abandoned state
+   □ Remove from cart (remove_from_cart)
+     - Verify removal source
+     - Check quantity changes
+
+2. Marketing Events
+   □ Promotion views (view_promotion)
+     - Check impression tracking
+     - Verify A/B test data
+   □ Promotion clicks (select_promotion)
+     - Verify referral data
+     - Check promotion groups
+   □ Search (search)
+     - Test filters
+     - Check sorting
+     - Verify results count
+
+3. User Events
+   □ Form submissions (generate_lead)
+     - Test multi-step forms
+     - Verify field tracking
+     - Check value capture
+   □ Login/Signup (login_signup)
+     - Test social login
+     - Verify error tracking
+     - Check success events
+
+4. Checkout Events (Shopify Plus)
+   □ Begin checkout
+   □ Shipping selection
+   □ Payment selection
+   □ Order completion
+
+VALIDATION
+----------
+1. Use GTM Preview mode
+2. Check browser console
+3. Verify events in GA4 DebugView
+4. Validate data layer
+5. Test complete checkout flow
+6. Verify error handling
+7. Check currency validation
+8. Test A/B scenarios
+
+NOTES
+-----
+- All events include enhanced error handling
+- Currency validation is standardized
+- A/B test support is available
+- Multi-step form tracking enabled
+- Social login tracking supported
+- Cart source/token tracking added
+- Enhanced category support
+- Bundle/cross-sell detection
+- Improved error messaging
+- Checkout requires Shopify Plus
