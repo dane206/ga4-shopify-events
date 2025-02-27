@@ -1,0 +1,113 @@
+STEP 1: Data Layer Variables
+Create these in GTM:
+
+Go to Variables > New > Data Layer Variable
+Create each one:
+
+Product Data:
+[ ] dlv - item.id
+[ ] dlv - item.name
+[ ] dlv - item.price
+[ ] dlv - item.brand
+[ ] dlv - item.category
+[ ] dlv - item.variant
+
+Cart Data:
+[ ] dlv - cart.token
+[ ] dlv - cart.type
+[ ] dlv - cart.value
+
+Promo Data:
+[ ] dlv - promo.id
+[ ] dlv - promo.name
+[ ] dlv - promo.creative
+
+Search/Form Data:
+[ ] dlv - search.term
+[ ] dlv - form.id
+
+// Create these Data Layer Variables first
+{
+  // Product Data
+  "dlv - item.id": "ecommerce.items.0.item_id",
+  "dlv - item.name": "ecommerce.items.0.item_name",
+  "dlv - item.price": "ecommerce.items.0.price",
+  "dlv - item.brand": "ecommerce.items.0.item_brand",
+  "dlv - item.category": "ecommerce.items.0.item_category",
+  "dlv - item.variant": "ecommerce.items.0.item_variant",
+  
+  // Cart Data
+  "dlv - cart.token": "ecommerce.cart_token",
+  "dlv - cart.type": "ecommerce.cart_type",
+  "dlv - cart.value": "ecommerce.value",
+  
+  // Promo Data
+  "dlv - promo.id": "ecommerce.items.0.promotion_id",
+  "dlv - promo.name": "ecommerce.items.0.promotion_name",
+  "dlv - promo.creative": "ecommerce.items.0.creative_name",
+  
+  // Search/Form Data
+  "dlv - search.term": "search_term",
+  "dlv - form.id": "form_id"
+}
+
+STEP 2: Custom Triggers
+Create these in GTM:
+
+Go to Triggers > New > Custom Event
+
+Create one for each:
+[ ] view_item_list
+[ ] select_item
+[ ] view_item
+[ ] add_to_cart
+[ ] view_cart
+[ ] remove_from_cart
+[ ] view_promotion
+[ ] select_promotion
+[ ] search
+[ ] generate_lead
+[ ] login
+[ ] sign_up
+
+// Event Names to Create Triggers For
+{
+  "view_item_list": "Custom Event",
+  "select_item": "Custom Event",
+  "view_item": "Custom Event",
+  "add_to_cart": "Custom Event",
+  "view_cart": "Custom Event",
+  "remove_from_cart": "Custom Event",
+  "view_promotion": "Custom Event",
+  "select_promotion": "Custom Event",
+  "search": "Custom Event",
+  "generate_lead": "Custom Event",
+  "login": "Custom Event",
+  "sign_up": "Custom Event"
+}
+
+// Example GA4 Event Tag Configuration
+{
+  "Tag Type": "GA4 Event",
+  "Event Name": "view_item",
+  "Event Parameters": {
+    "currency": "{{dlv - cart.currency}}",
+    "value": "{{dlv - cart.value}}",
+    "items": "{{dlv - items}}"
+  }
+}
+
+// Preview Mode Test Cases
+[
+  {
+    "Event": "view_item_list",
+    "Test": "Collection page load",
+    "Verify": ["items array", "list_type", "currency"]
+  },
+  {
+    "Event": "select_item",
+    "Test": "Product click",
+    "Verify": ["item data", "list source", "position"]
+  },
+  // ... continue for each event
+]
