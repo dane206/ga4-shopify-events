@@ -104,21 +104,21 @@ This package provides standardized tracking for 15 core GA4 e-commerce events:
 
 ### Best Practices
 
-1 Data Attributes
+1. Data Attributes
 
 - Use consistent naming
 - Include required fields
 - Validate values
 - Handle empty states
 
-2 Error Handling
+2. Error Handling
 
 - Catch all promises
 - Log meaningful errors
 - Fail gracefully
 - Maintain user experience
 
-3 Performance
+3. Performance
 
 - Lazy load scripts
 - Debounce events
@@ -275,7 +275,5 @@ For implementation support:
 MIT License - see LICENSE file
 
 ## Authors
-
-[Your Name/Team]
 
 Dane
